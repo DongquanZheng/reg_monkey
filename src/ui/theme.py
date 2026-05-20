@@ -169,6 +169,248 @@ def css_variables() -> str:
   --rm-line-height: {TYPOGRAPHY_TOKENS["line_height"]};
 }}
 
+html,
+body,
+.stApp,
+[data-testid="stHeader"],
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"],
+[data-testid="stMainBlockContainer"],
+.block-container {{
+  background: var(--rm-bg) !important;
+  color: var(--rm-text) !important;
+}}
+
+[data-testid="stHeader"],
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+[data-testid="stStatusWidget"] {{
+  background: var(--rm-bg) !important;
+  color: var(--rm-text) !important;
+}}
+
+[data-testid="stHeader"] button,
+[data-testid="stToolbar"] button,
+[data-testid="stToolbar"] svg,
+[data-testid="stStatusWidget"] button,
+[data-testid="stStatusWidget"] svg {{
+  color: var(--rm-text) !important;
+  fill: var(--rm-text) !important;
+}}
+
+main,
+main p,
+main li,
+main label,
+main span,
+main div[data-testid="stMarkdownContainer"],
+main div[data-testid="stMarkdownContainer"] p,
+main div[data-testid="stMarkdownContainer"] li,
+main h1,
+main h2,
+main h3,
+main h4,
+main h5,
+main h6,
+.section-title,
+.rm-card-title,
+.rm-callout-title,
+.rm-summary-value,
+.rm-metric-value,
+.rm-app-brand,
+.rm-section-header h2 {{
+  color: var(--rm-text) !important;
+}}
+
+main small,
+main [data-testid="stCaptionContainer"],
+main .stCaptionContainer,
+.section-guide,
+.rm-caption,
+.rm-page-subtitle,
+.rm-section-description,
+.rm-card-body,
+.rm-summary-label,
+.rm-chip-row,
+.rm-app-subtitle,
+.rm-app-tagline,
+.workflow-stage-label {{
+  color: var(--rm-text-muted) !important;
+}}
+
+main [data-testid="stWidgetLabel"],
+main [data-testid="stWidgetLabel"] p,
+main [data-testid="stWidgetLabel"] label,
+main [data-testid="stWidgetLabel"] span {{
+  color: var(--rm-text) !important;
+}}
+
+section[data-testid="stSidebar"],
+section[data-testid="stSidebar"] > div {{
+  background: #FFFCF7 !important;
+  color: var(--rm-text) !important;
+}}
+
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {{
+  color: var(--rm-text) !important;
+}}
+
+section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {{
+  color: var(--rm-text-muted) !important;
+}}
+
+div[data-baseweb="select"] > div,
+div[data-testid="stNumberInput"] input,
+div[data-testid="stTextInput"] input,
+textarea {{
+  background: #FFFFFF !important;
+  color: var(--rm-text) !important;
+  border-color: var(--rm-border) !important;
+}}
+
+div[data-testid="stNumberInput"] button,
+div[data-testid="stNumberInput"] button:hover {{
+  background: #FFFFFF !important;
+  border-color: var(--rm-border) !important;
+  color: var(--rm-text) !important;
+}}
+
+div[data-testid="stNumberInput"] button *,
+div[data-testid="stNumberInput"] button svg {{
+  color: var(--rm-text) !important;
+  fill: var(--rm-text) !important;
+}}
+
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] svg {{
+  color: var(--rm-text) !important;
+}}
+
+div[data-baseweb="popover"],
+div[data-baseweb="popover"] ul,
+div[data-baseweb="popover"] li {{
+  background: #FFFFFF !important;
+  color: var(--rm-text) !important;
+}}
+
+div[data-testid="stButton"] > button,
+div[data-testid="stDownloadButton"] > button,
+div[data-testid="stFormSubmitButton"] > button {{
+  background: #FFFFFF !important;
+  border: 1px solid var(--rm-border) !important;
+  color: var(--rm-text) !important;
+}}
+
+div[data-testid="stButton"] > button:hover,
+div[data-testid="stDownloadButton"] > button:hover,
+div[data-testid="stFormSubmitButton"] > button:hover {{
+  background: var(--rm-surface-soft) !important;
+  border-color: #D3C5B8 !important;
+  color: var(--rm-text) !important;
+}}
+
+div[data-testid="stButton"] > button[kind="primary"],
+div[data-testid="stDownloadButton"] > button[kind="primary"],
+div[data-testid="stFormSubmitButton"] > button[kind="primary"] {{
+  background: var(--rm-accent) !important;
+  border-color: var(--rm-accent) !important;
+  color: #FFFFFF !important;
+}}
+
+div[data-testid="stButton"] > button[kind="primary"] *,
+div[data-testid="stDownloadButton"] > button[kind="primary"] *,
+div[data-testid="stFormSubmitButton"] > button[kind="primary"] * {{
+  color: #FFFFFF !important;
+}}
+
+div[data-testid="stButton"] > button:disabled,
+div[data-testid="stDownloadButton"] > button:disabled,
+div[data-testid="stFormSubmitButton"] > button:disabled {{
+  background: var(--rm-muted) !important;
+  border-color: var(--rm-border) !important;
+  color: var(--rm-text-muted) !important;
+  opacity: 1 !important;
+}}
+
+div[data-testid="stButton"] > button:disabled *,
+div[data-testid="stDownloadButton"] > button:disabled *,
+div[data-testid="stFormSubmitButton"] > button:disabled * {{
+  color: var(--rm-text-muted) !important;
+}}
+
+[data-testid="stFileUploader"],
+[data-testid="stFileUploader"] section,
+[data-testid="stFileUploaderDropzone"] {{
+  background: #FFFFFF !important;
+  border-color: var(--rm-border) !important;
+  color: var(--rm-text) !important;
+}}
+
+[data-testid="stFileUploader"] p,
+[data-testid="stFileUploader"] small,
+[data-testid="stFileUploader"] span,
+[data-testid="stFileUploader"] label {{
+  color: var(--rm-text-muted) !important;
+}}
+
+[data-testid="stFileUploader"] button {{
+  background: #FFFFFF !important;
+  border-color: var(--rm-border) !important;
+  color: var(--rm-text) !important;
+}}
+
+[data-testid="stExpander"],
+[data-testid="stExpander"] details,
+[data-testid="stExpander"] summary {{
+  background: #FFFFFF !important;
+  border-color: var(--rm-border) !important;
+  color: var(--rm-text) !important;
+}}
+
+[data-testid="stExpander"] summary *,
+[data-testid="stExpander"] [data-testid="stMarkdownContainer"],
+[data-testid="stExpander"] [data-testid="stMarkdownContainer"] p,
+[data-testid="stExpander"] p,
+[data-testid="stExpander"] span,
+[data-testid="stExpander"] label {{
+  color: var(--rm-text) !important;
+}}
+
+[data-testid="stExpander"] svg {{
+  color: var(--rm-text) !important;
+  fill: var(--rm-text) !important;
+}}
+
+[data-testid="stAlert"] {{
+  background: var(--rm-warning-soft) !important;
+  border-color: #DEC891 !important;
+  color: var(--rm-text) !important;
+}}
+
+[data-testid="stAlert"] *,
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"],
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"] p {{
+  color: var(--rm-text) !important;
+}}
+
+[data-testid="stAlert"] svg {{
+  color: var(--rm-warning) !important;
+  fill: var(--rm-warning) !important;
+}}
+
+[data-testid="stCheckbox"] label,
+[data-testid="stCheckbox"] span,
+[data-testid="stCheckbox"] p {{
+  color: var(--rm-text) !important;
+}}
+
 .rm-card {{
   background: var(--rm-surface);
   border: {CARD_STYLE_TOKENS["border"]};
@@ -367,201 +609,6 @@ section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3 {{
   color: var(--rm-text);
-}}
-
-@media (prefers-color-scheme: dark) {{
-  :root {{
-    --rm-bg: #0F1117;
-    --rm-surface: #171B24;
-    --rm-surface-soft: #202633;
-    --rm-text: #F4EFE7;
-    --rm-text-muted: #C9BFB4;
-    --rm-border: #343A46;
-    --rm-accent: #E28C78;
-    --rm-accent-hover: #F0A08E;
-    --rm-accent-soft: #3A211F;
-    --rm-secondary: #95C4A4;
-    --rm-secondary-soft: #1D3027;
-    --rm-info: #9CC9EA;
-    --rm-info-soft: #172A3A;
-    --rm-success: #9DCEAB;
-    --rm-success-soft: #1B3126;
-    --rm-warning: #F0C46E;
-    --rm-warning-soft: #382C16;
-    --rm-danger: #F0A1A1;
-    --rm-danger-soft: #3A2020;
-    --rm-muted: #262D38;
-  }}
-
-  .stApp,
-  [data-testid="stAppViewContainer"],
-  [data-testid="stMain"],
-  [data-testid="stMainBlockContainer"],
-  .block-container {{
-    background: var(--rm-bg) !important;
-    color: var(--rm-text) !important;
-  }}
-
-  main,
-  main p,
-  main li,
-  main label,
-  main span,
-  main div[data-testid="stMarkdownContainer"],
-  main div[data-testid="stMarkdownContainer"] p,
-  main div[data-testid="stMarkdownContainer"] li,
-  main h1,
-  main h2,
-  main h3,
-  main h4,
-  main h5,
-  main h6,
-  .section-title,
-  .rm-card-title,
-  .rm-callout-title,
-  .rm-summary-value,
-  .rm-metric-value,
-  .rm-app-brand,
-  .rm-section-header h2 {{
-    color: var(--rm-text) !important;
-  }}
-
-  main small,
-  main [data-testid="stCaptionContainer"],
-  main .stCaptionContainer,
-  .section-guide,
-  .rm-caption,
-  .rm-page-subtitle,
-  .rm-section-description,
-  .rm-card-body,
-  .rm-summary-label,
-  .rm-chip-row,
-  .rm-app-subtitle,
-  .rm-app-tagline,
-  .workflow-stage-label {{
-    color: var(--rm-text-muted) !important;
-  }}
-
-  .rm-card,
-  .rm-card-soft,
-  .rm-summary-card,
-  .setup-entry-card,
-  .rm-workspace-card,
-  .rm-family-summary,
-  .rm-action-card,
-  .rm-action-card.rm-card,
-  .rm-status-card,
-  .rm-selection-card {{
-    background: var(--rm-surface) !important;
-    border-color: var(--rm-border) !important;
-    color: var(--rm-text) !important;
-  }}
-
-  .rm-card-selected,
-  .rm-selection-card-active {{
-    background: #221918 !important;
-    border-color: var(--rm-accent) !important;
-  }}
-
-  .rm-chip,
-  .workflow-stage-chip,
-  .setup-flow-chip,
-  .rm-badge-neutral {{
-    background: var(--rm-surface-soft) !important;
-    border-color: var(--rm-border) !important;
-    color: var(--rm-text) !important;
-  }}
-
-  .workflow-stage-chip-active {{
-    background: var(--rm-accent-soft) !important;
-    border-color: var(--rm-accent) !important;
-    color: var(--rm-accent) !important;
-  }}
-
-  .workflow-stage-chip-complete,
-  .setup-entry-card-primary {{
-    background: var(--rm-success-soft) !important;
-    border-color: #395C47 !important;
-    color: var(--rm-success) !important;
-  }}
-
-  .rm-callout {{
-    background: var(--rm-info-soft) !important;
-    border-color: #345A70 !important;
-    border-left-color: var(--rm-info) !important;
-    color: var(--rm-text) !important;
-  }}
-
-  .rm-callout-warning,
-  .rm-badge-warning,
-  .rm-badge-experimental {{
-    background: var(--rm-warning-soft) !important;
-    border-color: #6B5424 !important;
-    color: var(--rm-warning) !important;
-  }}
-
-  .rm-callout-success,
-  .rm-badge-success {{
-    background: var(--rm-success-soft) !important;
-    border-color: #395C47 !important;
-    color: var(--rm-success) !important;
-  }}
-
-  .rm-callout-danger,
-  .rm-badge-danger {{
-    background: var(--rm-danger-soft) !important;
-    border-color: #704040 !important;
-    color: var(--rm-danger) !important;
-  }}
-
-  .rm-app-shell {{
-    border-bottom-color: var(--rm-border) !important;
-  }}
-
-  .rm-app-logo {{
-    background: var(--rm-surface-soft) !important;
-    border-color: var(--rm-border) !important;
-    box-shadow: none !important;
-  }}
-
-  section[data-testid="stSidebar"],
-  section[data-testid="stSidebar"] > div {{
-    background: #FFFCF7 !important;
-    color: #25211D !important;
-  }}
-
-  section[data-testid="stSidebar"] p,
-  section[data-testid="stSidebar"] label,
-  section[data-testid="stSidebar"] span,
-  section[data-testid="stSidebar"] h1,
-  section[data-testid="stSidebar"] h2,
-  section[data-testid="stSidebar"] h3,
-  section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
-  section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {{
-    color: #25211D !important;
-  }}
-
-  section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {{
-    color: #6F655C !important;
-  }}
-
-  section[data-testid="stSidebar"] div[data-testid="stButton"] > button {{
-    color: #4F5663 !important;
-  }}
-
-  div[data-baseweb="select"] > div,
-  div[data-testid="stNumberInput"] input,
-  div[data-testid="stTextInput"] input,
-  textarea {{
-    background: var(--rm-surface-soft) !important;
-    color: var(--rm-text) !important;
-    border-color: var(--rm-border) !important;
-  }}
-
-  div[data-baseweb="select"] span,
-  div[data-baseweb="select"] svg {{
-    color: var(--rm-text) !important;
-  }}
 }}
 """.strip()
 

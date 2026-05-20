@@ -1831,12 +1831,7 @@ def _render_analysis_planner_tab(
             with st.expander(t("planner_rationale"), expanded=False):
                 for item in plan.rationale:
                     st.markdown(f"- {item}")
-            rec_col_1, rec_col_2 = st.columns(2)
-            if rec_col_1.button(t("apply_main_model_setup"), type="primary", disabled=not can_apply, key="planner_apply_main_model_button"):
-                _apply_analysis_plan_to_state(plan, language)
-                st.success(t("planner_applied"))
-                st.rerun()
-            if rec_col_2.button(t("plan_continue_run"), disabled=not can_apply, key="planner_apply_and_continue_run_button"):
+            if st.button(t("plan_continue_run"), type="primary", disabled=not can_apply, key="planner_apply_and_continue_run_button", width="stretch"):
                 _apply_analysis_plan_to_state(plan, language)
                 _go_to_page("run")
             if not can_apply:
@@ -1858,7 +1853,7 @@ def _render_analysis_planner_tab(
             )
             if st.session_state.plan_model_path == "manual":
                 st.caption(t("plan_path_current"))
-            elif st.button(t("choose_manual_path"), key="plan_choose_manual_path_button", width="stretch"):
+            elif st.button(t("choose_manual_path"), type="primary", key="plan_choose_manual_path_button", width="stretch"):
                 st.session_state.plan_model_path = "manual"
                 st.rerun()
 
@@ -3086,6 +3081,14 @@ def main() -> None:
 
                 with st.container(border=True):
                     render_pre_model_risk_check(df, active_spec, language)
+                if st.session_state.analysis_ran and st.session_state.get("model_run_result") is not None:
+                    _action_card(
+                        t("result_snapshot"),
+                        t("guide_interpret"),
+                        t("run_continue_interpret"),
+                        "interpret",
+                        "run_active_model_continue_interpret_button",
+                    )
             else:
                 _action_card(t("no_model_setup_selected"), t("run_needs_model_setup"), t("tab_plan"), "plan", "run_go_plan_for_setup_button")
             render_section_header(t("secondary_execution_tools"), t("secondary_execution_tools_caption"))
