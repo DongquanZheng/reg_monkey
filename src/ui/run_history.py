@@ -130,7 +130,7 @@ def _render_model_comparison_preview(records: list[dict[str, Any]], labels: list
     if len(selected_labels) > 3:
         st.warning(t("model_comparison_max_three_runs"))
     can_compare = 2 <= len(selected_labels) <= 3
-    if st.button(t("model_comparison_compare_selected"), key="model_comparison_compare_button", disabled=not can_compare):
+    if st.button(f"{t('model_comparison_compare_selected')} ↓", key="model_comparison_compare_button", disabled=not can_compare, type="secondary"):
         selected_records = [records[labels.index(label)] for label in selected_labels]
         comparison = compare_run_records(selected_records)
         st.dataframe(model_comparison_table(comparison, language), width="stretch", hide_index=True)

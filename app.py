@@ -7,6 +7,7 @@ import json
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 from src.agent import AnalysisPlan, generate_analysis_plan, generate_narrative, run_guided_workflow
 from src.agent.workflow_summary import workflow_result_frame, workflow_summary_markdown
@@ -575,9 +576,48 @@ def _recommended_page_id() -> str:
     return "interpret"
 
 
-def _go_to_page(page_id: str) -> None:
+def _go_to_page(page_id: str, anchor_id: str | None = None) -> None:
+    if anchor_id:
+        _request_scroll_anchor(anchor_id)
     st.session_state.workflow_page = page_id
     st.rerun()
+
+
+def _next_action(label: str) -> str:
+    text = str(label).rstrip()
+    return text if text.endswith("→") else f"{text} →"
+
+
+def _down_action(label: str) -> str:
+    text = str(label).rstrip()
+    return text if text.endswith("↓") else f"{text} ↓"
+
+
+def _request_scroll_anchor(anchor_id: str) -> None:
+    st.session_state.scroll_anchor_requested = anchor_id
+
+
+def _scroll_anchor(anchor_id: str) -> None:
+    safe_anchor = html.escape(anchor_id, quote=True)
+    st.markdown(f"<span id='{safe_anchor}'></span>", unsafe_allow_html=True)
+    if st.session_state.get("scroll_anchor_requested") != anchor_id:
+        return
+    st.session_state.pop("scroll_anchor_requested", None)
+    components.html(
+        f"""
+        <script>
+        try {{
+          const doc = window.parent.document;
+          const target = doc.getElementById("{safe_anchor}");
+          if (target) {{
+            target.scrollIntoView({{ block: "start", inline: "nearest", behavior: "auto" }});
+          }}
+        }} catch (error) {{}}
+        </script>
+        """,
+        height=0,
+        width=0,
+    )
 
 
 def _workflow_stepper(
@@ -631,7 +671,7 @@ def _render_reset_session_control(language: str) -> None:
     st.subheader(t("reset_session"))
     if not st.session_state.get(pending_key):
         if st.button(
-            t("reset_session"),
+            _down_action(t("reset_session")),
             key=f"reset_session_begin_button_{version}",
             type="secondary",
             width="stretch",
@@ -737,7 +777,7 @@ def _card(title: str, body: str, selected: bool = False) -> None:
 def _action_card(title: str, body: str, button_label: str | None = None, target_page: str | None = None, key: str | None = None) -> None:
     _card(title, body)
     if button_label and target_page and key:
-        if st.button(button_label, type="primary", key=key):
+        if st.button(_next_action(button_label), type="primary", key=key):
             _go_to_page(target_page)
 
 
@@ -1769,10 +1809,11 @@ def _render_analysis_planner_tab(
         _action_card(t("planner_confirm_roles_first"), t("planner_confirm_roles_subtext"), t("tab_setup"), "setup", "planner_go_setup_button")
         return
 
-    if st.button(t("generate_analysis_plan"), key="planner_generate_plan_button", width="stretch"):
+    if st.button(_down_action(t("generate_analysis_plan")), key="planner_generate_plan_button", type="secondary", width="stretch"):
         st.session_state.analysis_plan = generate_analysis_plan(df, confirmed_roles, language=normalize_language(language))
         st.session_state.analysis_plan_generated = True
         st.session_state.analysis_plan_applied = False
+        _request_scroll_anchor("analysis_plan_anchor")
         st.rerun()
 
     if (
@@ -1788,6 +1829,7 @@ def _render_analysis_planner_tab(
 
     main_model_name = plan.recommended_main_model.model_name if plan.recommended_main_model else t("not_available")
 
+    _scroll_anchor("analysis_plan_anchor")
     render_section_header(t("plan_section_title"), t("plan_section_body"))
     if st.session_state.plan_model_path == "recommended":
         st.session_state.plan_manual_requested_model_id = ""
@@ -1813,9 +1855,10 @@ def _render_analysis_planner_tab(
             )
             if st.session_state.plan_model_path == "recommended":
                 st.caption(t("plan_path_current"))
-            elif st.button(t("choose_recommended_path"), key="plan_choose_recommended_path_button", width="stretch"):
+            elif st.button(_down_action(t("choose_recommended_path")), key="plan_choose_recommended_path_button", type="secondary", width="stretch"):
                 st.session_state.plan_model_path = "recommended"
                 st.session_state.plan_manual_requested_model_id = ""
+                _request_scroll_anchor("analysis_plan_anchor")
                 st.rerun()
             _model_summary_card(
                 language,
@@ -1831,9 +1874,9 @@ def _render_analysis_planner_tab(
             with st.expander(t("planner_rationale"), expanded=False):
                 for item in plan.rationale:
                     st.markdown(f"- {item}")
-            if st.button(t("plan_continue_run"), type="primary", disabled=not can_apply, key="planner_apply_and_continue_run_button", width="stretch"):
+            if st.button(_next_action(t("plan_continue_run")), type="primary", disabled=not can_apply, key="planner_apply_and_continue_run_button", width="stretch"):
                 _apply_analysis_plan_to_state(plan, language)
-                _go_to_page("run")
+                _go_to_page("run", "run_primary_action_anchor")
             if not can_apply:
                 st.caption(t("planner_apply_disabled"))
             elif st.session_state.analysis_plan_applied:
@@ -1853,14 +1896,16 @@ def _render_analysis_planner_tab(
             )
             if st.session_state.plan_model_path == "manual":
                 st.caption(t("plan_path_current"))
-            elif st.button(t("choose_manual_path"), type="primary", key="plan_choose_manual_path_button", width="stretch"):
+            elif st.button(_down_action(t("choose_manual_path")), type="secondary", key="plan_choose_manual_path_button", width="stretch"):
                 st.session_state.plan_model_path = "manual"
+                _request_scroll_anchor("manual_config_anchor")
                 st.rerun()
 
     def _open_manual_candidate(model_id: str) -> None:
         st.session_state.plan_model_path = "manual"
         st.session_state.plan_manual_requested_model_id = model_id
         st.session_state.model_setup_version += 1
+        _request_scroll_anchor("manual_config_anchor")
 
     with st.container(border=True):
         _render_research_design_candidate_preview(
@@ -1874,6 +1919,7 @@ def _render_analysis_planner_tab(
     if st.session_state.plan_model_path == "recommended":
         render_callout(t("manual_configuration_title"), t("configure_section_recommended_hint"), tone="info")
     else:
+        _scroll_anchor("manual_config_anchor")
         initial_manual_model_id = active_model_id if st.session_state.model_setup_source == "manual" else requested_model_id
         initial_manual_config = active_config if st.session_state.model_setup_source == "manual" else {}
         with st.container(border=True):
@@ -1928,26 +1974,27 @@ def _render_analysis_planner_tab(
             manual_valid = bool(manual_result["model_id"] and manual_result["run_valid"])
             render_section_header(t("manual_workspace_actions"), None)
             manual_col_1, manual_col_2 = st.columns(2)
-            if manual_col_1.button(t("use_manual_settings"), type="primary", disabled=not manual_valid, key="plan_use_manual_settings_button"):
+            if manual_col_1.button(_down_action(t("use_manual_settings")), type="secondary", disabled=not manual_valid, key="plan_use_manual_settings_button"):
                 _store_model_setup(manual_result["model_id"], manual_result["config"], "manual")
                 st.session_state.analysis_plan_applied = False
                 st.session_state.applied_plan_model_id = ""
                 st.session_state.model_setup_version += 1
+                _request_scroll_anchor("manual_config_anchor")
                 st.success(t("manual_settings_applied"))
                 st.rerun()
-            if manual_col_2.button(t("use_manual_settings_continue"), disabled=not manual_valid, key="plan_use_manual_settings_continue_button"):
+            if manual_col_2.button(_next_action(t("use_manual_settings_continue")), type="primary", disabled=not manual_valid, key="plan_use_manual_settings_continue_button"):
                 _store_model_setup(manual_result["model_id"], manual_result["config"], "manual")
                 st.session_state.analysis_plan_applied = False
                 st.session_state.applied_plan_model_id = ""
                 st.session_state.model_setup_version += 1
-                _go_to_page("run")
+                _go_to_page("run", "run_primary_action_anchor")
 
     current_model_id, current_config = _active_model_setup()
     with st.expander(t("current_selected_setup"), expanded=False):
         if current_model_id:
             _model_summary_card(language, t("model_summary"), [(t("setup_source"), _setup_source_label(language, st.session_state.model_setup_source))] + _model_setup_rows(current_model_id, current_config, language))
-            if st.button(t("continue_to_run_analysis"), type="primary", key="plan_current_continue_run_button"):
-                _go_to_page("run")
+            if st.button(_next_action(t("continue_to_run_analysis")), type="primary", key="plan_current_continue_run_button"):
+                _go_to_page("run", "run_primary_action_anchor")
         else:
             st.caption(t("no_model_setup_selected"))
 
@@ -2038,6 +2085,7 @@ def _render_guided_workflow_block(
 
     workflow_result = st.session_state.guided_workflow_result
     if st.session_state.guided_workflow_has_run and workflow_result is not None:
+        _scroll_anchor("guided_workflow_result_anchor")
         st.subheader(t("workflow_summary"))
         st.markdown(workflow_summary_markdown(workflow_result, language, detailed=False))
         st.subheader(t("result_comparison"))
@@ -2050,7 +2098,7 @@ def _render_guided_workflow_block(
                 st.dataframe(prepare_display_table(pd.DataFrame(workflow_result.comparison.coefficient_comparison), language), width="stretch")
             st.write(workflow_result.user_next_steps)
 
-    if st.button(t("run_guided_analysis"), type="primary", key="planner_run_guided_workflow_button", width="stretch"):
+    if st.button(_down_action(t("run_guided_analysis")), type="secondary", key="planner_run_guided_workflow_button", width="stretch"):
         workflow_result = run_guided_workflow(df, confirmed_roles, plan, language=normalize_language(language))
         st.session_state.guided_workflow_result = workflow_result
         st.session_state.guided_workflow_has_run = True
@@ -2082,6 +2130,7 @@ def _render_guided_workflow_block(
                 variable_roles=confirmed_roles,
                 guided_workflow_result=workflow_result,
             )
+        _request_scroll_anchor("guided_workflow_result_anchor")
         st.rerun()
 
 
@@ -2469,6 +2518,7 @@ def main() -> None:
         pending_demo_dataset_id = st.session_state.pop("pending_demo_dataset_id", "")
         if pending_demo_dataset_id:
             _load_demo_dataset_into_session(str(pending_demo_dataset_id))
+            _request_scroll_anchor("preprocessing_anchor")
         if st.session_state.workflow_page not in page_ids:
             st.session_state.workflow_page = "setup"
         current_page = st.session_state.workflow_page
@@ -2574,7 +2624,7 @@ def main() -> None:
                     language,
                     expanded=is_public_demo_mode(),
                 )
-                if st.button(t("load_sample_dataset"), key="demo_dataset_load_button", type="secondary", width="stretch"):
+                if st.button(_down_action(t("load_sample_dataset")), key="demo_dataset_load_button", type="secondary", width="stretch"):
                     st.session_state.pending_demo_dataset_id = selected_demo_dataset_id
                     st.rerun()
         with st.expander(t("upload_privacy_notice"), expanded=False):
@@ -2735,6 +2785,7 @@ def main() -> None:
                 render_metric_card(t("coerce_numeric"), t("yes") if coerce_numeric else t("no"), tone="neutral")
 
         with st.container(border=True):
+            _scroll_anchor("preprocessing_anchor")
             render_section_header(t("setup_data_preview_title"), t("setup_data_preview_body"))
             raw_tab, processed_tab = st.tabs([t("raw_tab"), t("processed_tab")])
             with raw_tab:
@@ -2757,13 +2808,15 @@ def main() -> None:
                 st.dataframe(_preprocessing_log_frame(raw_df, df, preprocessing_log), width="stretch")
                 st.write(f"**{t('converted_numeric')}:**", preprocessing_log["columns_converted_to_numeric"] or "None")
                 st.write(f"**{t('kept_categorical')}:**", preprocessing_log["columns_kept_as_categorical"] or "None")
-            if st.button(t("confirm_cleaned_data"), type="primary", width="stretch", help=t("confirm_cleaned_data_help")):
+            if st.button(_down_action(t("confirm_cleaned_data")), type="primary", width="stretch", help=t("confirm_cleaned_data_help")):
                 st.session_state.confirm_preprocessing = True
+                _request_scroll_anchor("variable_roles_anchor")
                 st.rerun()
             if st.session_state.confirm_preprocessing:
                 st.success(t("preprocessing_confirmed"))
 
         with st.container(border=True):
+            _scroll_anchor("variable_roles_anchor")
             render_section_header(t("variable_roles"), t("guide_variables"))
             if not st.session_state.confirm_preprocessing:
                 st.warning(t("variables_confirm_preprocess_first"))
@@ -2807,7 +2860,7 @@ def main() -> None:
                 )
                 st.caption(t("role_summary_caption"))
                 st.dataframe(_role_group_frame(_roles_from_editor(edited_roles, language), language), width="stretch")
-                if st.button(t("confirm_variable_roles"), type="primary", width="stretch"):
+                if st.button(_next_action(t("confirm_variable_roles")), type="primary", width="stretch"):
                     st.session_state.variable_roles = _roles_from_editor(edited_roles, language)
                     st.session_state.confirm_variable_roles = True
                     _reset_planner()
@@ -2815,14 +2868,14 @@ def main() -> None:
                     _go_to_page("understand")
                 if st.session_state.confirm_variable_roles:
                     st.success(t("variable_roles_saved"))
-                    if st.button(t("setup_continue_understand"), type="primary", width="stretch", key="setup_bottom_continue_understand"):
+                    if st.button(_next_action(t("setup_continue_understand")), type="primary", width="stretch", key="setup_bottom_continue_understand"):
                         _go_to_page("understand")
 
     elif current_page == "understand":
         render_page_header(t("tab_understand_title"), t("guide_understand"))
         if not st.session_state.confirm_variable_roles:
             render_empty_state(t("confirm_roles_first"), t("confirm_roles_first_subtext"), t("tab_setup"))
-            if st.button(t("tab_setup"), type="primary", key="understand_go_setup_button", width="stretch"):
+            if st.button(_next_action(t("tab_setup")), type="primary", key="understand_go_setup_button", width="stretch"):
                 _go_to_page("setup")
         else:
             missing_counts = pd.Series(profile["missing_counts"])
@@ -3003,7 +3056,7 @@ def main() -> None:
 
             if st.session_state.explored_data:
                 st.success(t("exploration_confirmed"))
-                if st.button(t("understand_continue_plan"), type="primary", width="stretch", key="understand_bottom_continue_plan"):
+                if st.button(_next_action(t("understand_continue_plan")), type="primary", width="stretch", key="understand_bottom_continue_plan"):
                     _go_to_page("plan")
 
     elif current_page == "plan":
@@ -3045,6 +3098,7 @@ def main() -> None:
                         + _model_setup_rows(active_model_id, active_config, language),
                     )
 
+                _scroll_anchor("run_primary_action_anchor")
                 if setup_errors:
                     with st.container(border=True):
                         render_section_header(t("run_blocking_validation"), t("pre_model_risk_caption"))
@@ -3058,8 +3112,9 @@ def main() -> None:
                             t("run_action_body"),
                             badge=(t(f"risk_level_{risk_profile.overall_risk_level}"), "warning" if risk_profile.overall_risk_level in {"warning", "error"} else "success"),
                         )
-                        if st.button(t("run_analysis"), type="primary", disabled=bool(setup_errors), key="run_active_model_button", width="stretch"):
+                        if st.button(_down_action(t("run_analysis")), type="primary", disabled=bool(setup_errors), key="run_active_model_button", width="stretch"):
                             if _execute_model_setup(df, profile, confirmed_roles, language, active_model, run_config):
+                                _request_scroll_anchor("run_result_anchor")
                                 st.rerun()
                         render_action_card(
                             t("run_action_title"),
@@ -3082,6 +3137,7 @@ def main() -> None:
                 with st.container(border=True):
                     render_pre_model_risk_check(df, active_spec, language)
                 if st.session_state.analysis_ran and st.session_state.get("model_run_result") is not None:
+                    _scroll_anchor("run_result_anchor")
                     _action_card(
                         t("result_snapshot"),
                         t("guide_interpret"),
@@ -3342,11 +3398,13 @@ def main() -> None:
                         else:
                             st.caption(_disabled_reason(language, selected_model, y_col, main_x))
     
-                        if st.button(t("run_analysis"), type="primary", disabled=not run_valid, width="stretch"):
+                        if st.button(_down_action(t("run_analysis")), type="primary", disabled=not run_valid, width="stretch"):
                             _store_model_setup(selected_model.model_id, config, "manual")
                             if _execute_model_setup(df, profile, confirmed_roles, language, selected_model, config):
+                                _request_scroll_anchor("run_result_anchor")
                                 st.rerun()
                         if st.session_state.analysis_ran:
+                            _scroll_anchor("run_result_anchor")
                             _action_card(
                                 t("guided_workflow_results_summary"),
                                 t("guide_interpret"),
@@ -3618,7 +3676,7 @@ def main() -> None:
                         (t("export_selected_report_includes"), selected_body),
                     ],
                 )
-                if st.button(t("generate_report"), type="primary", width="stretch"):
+                if st.button(_down_action(t("generate_report")), type="secondary", width="stretch"):
                     st.success(t("report_generated"))
 
             with st.expander(t("export_technical_contents"), expanded=False):

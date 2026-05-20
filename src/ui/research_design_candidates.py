@@ -98,7 +98,7 @@ def render_research_design_candidate_preview(
             render_research_design_questions(item["design_id"], language)
             if item["design_id"] in EXPERIMENTAL_MANUAL_MODEL_IDS and on_go_manual is not None:
                 if st.button(
-                    get_text(language, "rd_go_manual_config"),
+                    f"{get_text(language, 'rd_go_manual_config')} ↓",
                     key=f"rd_go_manual_config_{item['design_id']}",
                     type="secondary",
                 ):

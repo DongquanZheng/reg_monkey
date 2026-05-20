@@ -6,8 +6,13 @@ Reg Monkey 是一个面向商科、经济学和管理学研究流程的双语实
 
 ## Choose a language / 选择语言
 
-- [English](README.en.md)
-- [中文](README.zh.md)
+- [English README](README.en.md)
+- [中文说明](README.zh.md)
+
+## User guide / 使用手册
+
+- [English user guide](USER_GUIDE.en.md)
+- [中文使用手册](USER_GUIDE.zh.md)
 
 | English | 中文 |
 |---|---|

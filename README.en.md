@@ -4,11 +4,11 @@ Reg Monkey is a bilingual empirical analysis assistant for business, economics, 
 
 It helps users inspect data, configure deterministic statistical models, read diagnostics, and export reports. It supports English and Chinese UI/report wording and includes synthetic sample datasets for demo workflows.
 
-[中文说明](README.zh.md)
+[中文说明](README.zh.md) | [User guide](USER_GUIDE.en.md)
 
 ![Reg Monkey setup screenshot](screenshots/readme/en_setup.png)
 
-## What it does
+## What It Does
 
 - Upload CSV or Excel data, or start with built-in synthetic sample datasets.
 - Inspect data quality, missingness, variable roles, and resource warnings before modeling.
@@ -18,7 +18,23 @@ It helps users inspect data, configure deterministic statistical models, read di
 
 Reg Monkey does not prove causality, rank models automatically, or replace econometric judgment.
 
-## Run locally
+## Try It
+
+For first-time users, start with the OLS synthetic business sample.
+
+1. Load a sample dataset.
+2. Confirm preprocessing and variable roles.
+3. Inspect data quality.
+4. Apply the recommended setup or configure a model manually.
+5. Run the model.
+6. Read the result and diagnostics.
+7. Export a report or reproducibility pack.
+
+![Reg Monkey result screenshot](screenshots/readme/en_interpret_ols.png)
+
+See the full [English user guide](USER_GUIDE.en.md) for step-by-step instructions.
+
+## Run Locally
 
 ```bash
 python -m venv .venv
@@ -36,7 +52,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-## Streamlit demo setup
+## Streamlit Demo Setup
 
 Use `app.py` as the Streamlit entrypoint.
 
@@ -46,21 +62,9 @@ For public-demo mode, set:
 REG_MONKEY_PUBLIC_DEMO_MODE=true
 ```
 
-No API keys, login system, database, telemetry service, or external LLM provider is required for the demo.
+No API keys, login system, database, telemetry service, or external hosted model service is required for the demo.
 
-## Sample workflow
-
-1. Open the app and choose a synthetic sample dataset.
-2. Confirm preprocessing and variable roles.
-3. Review the Understand Data dashboard.
-4. Use the recommended setup or manually configure a model.
-5. Run the model after reviewing pre-run risks.
-6. Read the result snapshot, beginner guide, diagnostics, and cautions.
-7. Export a brief report, full report, or reproducibility pack.
-
-![Reg Monkey result screenshot](screenshots/readme/en_interpret_ols.png)
-
-## Supported model families
+## Supported Model Families
 
 | Family | Status | Notes |
 |---|---:|---|
@@ -72,7 +76,7 @@ No API keys, login system, database, telemetry service, or external LLM provider
 | IV/2SLS | Guarded manual workflow | Requires instrument relevance and exclusion-restriction judgment. |
 | PSM | Guarded manual workflow | Balances observed covariates only; unobserved confounding may remain. |
 
-## Demo boundaries
+## Demo Boundaries
 
 - Use synthetic sample data first.
 - Do not upload sensitive, confidential, or personal data to a public demo.

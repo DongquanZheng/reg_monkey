@@ -163,9 +163,9 @@ def render_missing_data_plan_builder(
             st.info(t("missing_data_no_data_changes"))
 
         apply_clicked = st.button(
-            t("missing_data_apply"),
+            f"{t('missing_data_apply')} ↓",
             key="missing_data_apply_button",
-            type="primary",
+            type="secondary",
             width="stretch",
             disabled=bool(validation.errors),
         )
