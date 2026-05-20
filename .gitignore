@@ -1,0 +1,51 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+.env
+.DS_Store
+.streamlit/secrets.toml
+*.log
+dist/
+build/
+
+# Local agent/tooling caches
+.skills/
+
+# Local QA, audit, and release-gate scratch output
+logs/
+qa_scratch*/
+streamlit_launch_check.*
+
+# Local debug screenshots and one-off user-provided source images
+debug_*.png
+approved_mascot.png
+
+# Local-only archived mascot image experiments
+assets/mascot/*.png
+
+# Internal development and QA material excluded from the public demo repository
+AGENTS.md
+ARCHITECTURE.md
+CHANGELOG.md
+ROADMAP.md
+TASK_STATE.md
+QA_CHECKLIST.md
+QA_UI_CHECKLIST.md
+UI_TEST_REPORT.md
+docs/
+scripts/
+tests/
+tests_ui/
+test_dataset/
+pytest.ini
+screenshots/ui_tests/
+screenshots/README.md
+screenshots/readme/README.md
+assets/
+setup_windows.bat
+setup_mac.command
+start_windows.bat
+start_mac.command
