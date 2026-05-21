@@ -4,6 +4,10 @@ Reg Monkey is a bilingual empirical analysis assistant for business, economics, 
 
 Reg Monkey 是一个面向商科、经济学和管理学研究流程的双语实证分析助手。
 
+<h1 align="center">🐒</h1>
+
+<p align="center"><strong>Inspect → Plan → Run → Interpret → Export</strong></p>
+
 ## Choose a language / 选择语言
 
 - [English README](README.en.md)
